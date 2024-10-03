@@ -50,7 +50,7 @@ CONFIG_FEED_sqm_scripts_nss=n
 #我测试增加的
 CONFIG_PACKAGE_dockerd=y
 CONFIG_PACKAGE_docker-compose=y
-
+CONFIG_PACKAGE_luci-app-dockerman=y
 
 
 

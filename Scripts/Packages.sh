@@ -24,6 +24,13 @@ UPDATE_PACKAGE() {
 UPDATE_PACKAGE "argon" "jerrykuku/luci-theme-argon" "master"
 UPDATE_PACKAGE "kucat" "sirpdboy/luci-theme-kucat" "js"
 
+#====
+UPDATE_PACKAGE "luci-theme-design" "SAENE/luci-theme-design" "js"
+UPDATE_PACKAGE "luci-theme-alpha" "derisamedia/luci-theme-alpha" "master"
+UPDATE_PACKAGE "edge" "kiddin9/luci-theme-edge" "master"
+UPDATE_PACKAGE "luci-app-store" "linkease/istore" "main"
+UPDATE_PACKAGE "luci-app-nginx" "arenekosreal/luci-app-nginx" "master"
+#========
 UPDATE_PACKAGE "homeproxy" "VIKINGYFY/homeproxy" "main"
 UPDATE_PACKAGE "mihomo" "morytyann/OpenWrt-mihomo" "main"
 UPDATE_PACKAGE "nekoclash" "Thaolga/luci-app-nekoclash" "main"

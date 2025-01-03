@@ -36,6 +36,8 @@ UPDATE_PACKAGE "vnt" "lazyoop/networking-artifact" "main" "pkg"
 UPDATE_PACKAGE "easytier" "lazyoop/networking-artifact" "main" "pkg"
 
 UPDATE_PACKAGE "istore" "linkease/istore" "main"
+
+
 UPDATE_PACKAGE "luci-app-advancedplus" "VIKINGYFY/packages" "main" "pkg"
 UPDATE_PACKAGE "luci-app-gecoosac" "lwb1978/openwrt-gecoosac" "main"
 UPDATE_PACKAGE "luci-app-tailscale" "asvow/luci-app-tailscale" "main"
@@ -82,3 +84,32 @@ UPDATE_VERSION() {
 #UPDATE_VERSION "软件包名" "测试版，true，可选，默认为否"
 UPDATE_VERSION "sing-box"
 UPDATE_VERSION "tailscale"
+
+# 添加新的 feeds 并更新安装 istore 相关软件包
+echo "Adding istore feed to feeds.conf.default..."
+echo >> feeds.conf.default
+echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
+
+echo "Updating istore feed..."
+./scripts/feeds update istore
+
+echo "Installing luci-app-store package from istore feed..."
+./scripts/feeds install -d y -p istore luci-app-store
+
+
+# 添加新的 feeds 并更新安装 nas 相关软件包
+echo "Adding new feeds to feeds.conf.default..."
+echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> feeds.conf.default
+echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> feeds.conf.default
+
+echo "Updating feeds..."
+./scripts/feeds update nas nas_luci
+
+echo "Installing nas and nas_luci packages..."
+./scripts/feeds install -a -p nas
+./scripts/feeds install -a -p nas_luci
+
+
+
+
+

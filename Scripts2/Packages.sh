@@ -85,6 +85,9 @@ UPDATE_VERSION() {
 UPDATE_VERSION "sing-box"
 UPDATE_VERSION "tailscale"
 
+echo "Current working directory: $(pwd)"
+
+
 # 添加新的 feeds 并更新安装 istore 相关软件包
 echo "Adding istore feed to feeds.conf.default..."
 echo >> feeds.conf.default

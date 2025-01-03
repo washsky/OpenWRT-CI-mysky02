@@ -85,33 +85,35 @@ UPDATE_VERSION() {
 UPDATE_VERSION "sing-box"
 UPDATE_VERSION "tailscale"
 
+
+
 echo "Current working directory: $(pwd)"
 
+# 定义 OpenWRT 根目录的路径（相对于当前目录）
+OPENWRT_ROOT="../../.."
 
 # 添加新的 feeds 并更新安装 istore 相关软件包
 echo "Adding istore feed to feeds.conf.default..."
-echo >> feeds.conf.default
-echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
+echo >> "$OPENWRT_ROOT/feeds.conf.default"
+echo 'src-git istore https://github.com/linkease/istore;main' >> "$OPENWRT_ROOT/feeds.conf.default"
 
 echo "Updating istore feed..."
-./scripts/feeds update istore
+"$OPENWRT_ROOT/scripts/feeds" update istore || { echo "Failed to update istore feed."; exit 1; }
 
 echo "Installing luci-app-store package from istore feed..."
-./scripts/feeds install -d y -p istore luci-app-store
-
+"$OPENWRT_ROOT/scripts/feeds" install -d y -p istore luci-app-store || { echo "Failed to install luci-app-store."; exit 1; }
 
 # 添加新的 feeds 并更新安装 nas 相关软件包
 echo "Adding new feeds to feeds.conf.default..."
-echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> feeds.conf.default
-echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> feeds.conf.default
+echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> "$OPENWRT_ROOT/feeds.conf.default"
+echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> "$OPENWRT_ROOT/feeds.conf.default"
 
 echo "Updating feeds..."
-./scripts/feeds update nas nas_luci
+"$OPENWRT_ROOT/scripts/feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
 
 echo "Installing nas and nas_luci packages..."
-./scripts/feeds install -a -p nas
-./scripts/feeds install -a -p nas_luci
-
+"$OPENWRT_ROOT/scripts/feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
+"$OPENWRT_ROOT/scripts/feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }
 
 
 

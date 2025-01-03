@@ -87,10 +87,19 @@ UPDATE_VERSION "tailscale"
 
 
 
+
+
 echo "Current working directory: $(pwd)"
 
-# 定义 OpenWRT 根目录的路径（相对于当前目录）
-OPENWRT_ROOT="../../.."
+# 动态查找 OpenWRT 根目录
+OPENWRT_ROOT=$(find "$(pwd)" -type f -name "feeds.conf.default" -exec dirname {} \;)
+
+if [ -z "$OPENWRT_ROOT" ]; then
+    echo "Error: Unable to locate OpenWRT root directory!"
+    exit 1
+fi
+
+echo "Detected OpenWRT root directory: $OPENWRT_ROOT"
 
 # 添加新的 feeds 并更新安装 istore 相关软件包
 echo "Adding istore feed to feeds.conf.default..."
@@ -114,7 +123,5 @@ echo "Updating feeds..."
 echo "Installing nas and nas_luci packages..."
 "$OPENWRT_ROOT/scripts/feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
 "$OPENWRT_ROOT/scripts/feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }
-
-
 
 

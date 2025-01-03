@@ -43,3 +43,20 @@ CONFIG_PACKAGE_luci-app-ddns-go=y
 CONFIG_PACKAGE_qrencode=y
 CONFIG_PACKAGE_luci-proto-wireguard=y
 CONFIG_PACKAGE_luci-ssl-openssl=y
+
+# 
+
+# nas-packages-luci istore产品
+# CONFIG_PACKAGE_luci-app-ddnsto=y
+# CONFIG_PACKAGE_luci-app-floatip=y
+# CONFIG_PACKAGE_luci-app-istoreenhance=y
+CONFIG_PACKAGE_luci-app-istorex=y
+# CONFIG_PACKAGE_luci-app-linkease=y
+CONFIG_PACKAGE_luci-app-quickstart=y
+# CONFIG_PACKAGE_luci-app-unishare=y
+# CONFIG_PACKAGE_luci-lib-iform=y
+# CONFIG_PACKAGE_luci-nginxer=y
+
+
+
+

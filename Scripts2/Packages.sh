@@ -90,17 +90,41 @@ UPDATE_VERSION "tailscale"
 
 
 
-echo "Current working directory: $(pwd)"
+# echo "Current working directory: $(pwd)"
 
-# 硬编码 OpenWRT 根目录路径
-OPENWRT_ROOT="/home/runner/work/OpenWRT-CI-mysky02/OpenWRT-CI-mysky02/wrt"
+# # 硬编码 OpenWRT 根目录路径
+# OPENWRT_ROOT="/home/runner/work/OpenWRT-CI-mysky02/OpenWRT-CI-mysky02/wrt"
 
-if [ ! -f "$OPENWRT_ROOT/feeds.conf.default" ]; then
-    echo "Error: Unable to locate OpenWRT root directory at $OPENWRT_ROOT!"
-    exit 1
-fi
+# if [ ! -f "$OPENWRT_ROOT/feeds.conf.default" ]; then
+#     echo "Error: Unable to locate OpenWRT root directory at $OPENWRT_ROOT!"
+#     exit 1
+# fi
 
-echo "Detected OpenWRT root directory: $OPENWRT_ROOT"
+# echo "Detected OpenWRT root directory: $OPENWRT_ROOT"
+
+# # 添加新的 feeds 并更新安装 istore 相关软件包
+# echo "Adding istore feed to feeds.conf.default..."
+# echo >> "$OPENWRT_ROOT/feeds.conf.default"
+# # echo 'src-git istore https://github.com/linkease/istore;main' >> "$OPENWRT_ROOT/feeds.conf.default"
+# echo 'src-git istore https://github.com/washsky/istore;washsky-patch-1' >> "$OPENWRT_ROOT/feeds.conf.default"
+
+# echo "Updating istore feed..."
+# "$OPENWRT_ROOT/scripts/feeds" update istore || { echo "Failed to update istore feed."; exit 1; }
+
+# echo "Installing luci-app-store package from istore feed..."
+# "$OPENWRT_ROOT/scripts/feeds" install -d y -p istore luci-app-store || { echo "Failed to install luci-app-store."; exit 1; }
+
+
+
+
+
+
+
+
+# 定义下载文件的 URL 和目标路径
+FILE_URL="https://github.com/linkease/istore-ui/archive/refs/tags/v0.1.27-2.tar.gz"
+TARGET_DIR="$OPENWRT_ROOT/dl"
+TARGET_FILE="$TARGET_DIR/istore-ui-v0.1.27-2.tar.gz"
 
 # 添加新的 feeds 并更新安装 istore 相关软件包
 echo "Adding istore feed to feeds.conf.default..."
@@ -111,8 +135,42 @@ echo 'src-git istore https://github.com/washsky/istore;washsky-patch-1' >> "$OPE
 echo "Updating istore feed..."
 "$OPENWRT_ROOT/scripts/feeds" update istore || { echo "Failed to update istore feed."; exit 1; }
 
+# 手动下载文件控制
+if [ ! -f "$TARGET_FILE" ]; then
+    echo "File $TARGET_FILE not found. Attempting to download manually..."
+
+    # 尝试通过 wget 下载文件，并增加 -v 选项显示调试信息
+    wget -v --connect-timeout=20 --tries=5 --timeout=20 --retry-connrefused --no-check-certificate "$FILE_URL" -O "$TARGET_FILE"
+
+    if [ $? -ne 0 ]; then
+        echo "Download failed from primary URL: $FILE_URL. Attempting to use a fallback URL..."
+
+        # 尝试使用备用 URL 下载
+        FALLBACK_URL="https://mirror2.immortalwrt.org/sources/istore-ui-v0.1.27-2.tar.gz"
+        wget -v --connect-timeout=20 --tries=5 --timeout=20 --retry-connrefused --no-check-certificate "$FALLBACK_URL" -O "$TARGET_FILE"
+
+        if [ $? -ne 0 ]; then
+            echo "Download from fallback URL also failed. Exiting."
+            exit 1
+        else
+            echo "File downloaded successfully from fallback URL."
+        fi
+    else
+        echo "File downloaded successfully from primary URL."
+    fi
+else
+    echo "File already exists at $TARGET_FILE."
+fi
+
+# 安装 luci-app-store 包
 echo "Installing luci-app-store package from istore feed..."
 "$OPENWRT_ROOT/scripts/feeds" install -d y -p istore luci-app-store || { echo "Failed to install luci-app-store."; exit 1; }
+
+
+
+
+
+
 
 # 添加新的 feeds 并更新安装 nas 相关软件包
 echo "Adding new feeds to feeds.conf.default..."

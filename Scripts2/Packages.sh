@@ -91,16 +91,16 @@ UPDATE_VERSION "tailscale"
 # 显示当前工作目录
 echo "Current working directory: $(pwd)"
 
-# # 硬编码 OpenWRT 根目录路径
-# OPENWRT_ROOT="/home/runner/work/OpenWRT-CI-mysky02/OpenWRT-CI-mysky02/wrt"
+# 硬编码 OpenWRT 根目录路径
+OPENWRT_ROOT="/home/runner/work/OpenWRT-CI-mysky02/OpenWRT-CI-mysky02/wrt"
 
-# # 确认 OpenWRT 根目录路径是否存在
-# if [ ! -d "$OPENWRT_ROOT" ]; then
-#     echo "Error: Unable to locate OpenWRT root directory at $OPENWRT_ROOT!"
-#     exit 1
-# fi
+# 确认 OpenWRT 根目录路径是否存在
+if [ ! -d "$OPENWRT_ROOT" ]; then
+    echo "Error: Unable to locate OpenWRT root directory at $OPENWRT_ROOT!"
+    exit 1
+fi
 
-# echo "Detected OpenWRT root directory: $OPENWRT_ROOT"
+echo "Detected OpenWRT root directory: $OPENWRT_ROOT"
 
 # # 确认 feeds.conf.default 是否存在
 # if [ ! -f "$OPENWRT_ROOT/feeds.conf.default" ]; then
@@ -194,11 +194,11 @@ echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >
 ls -l $GITHUB_WORKSPACE
 
 echo "Updating feeds..."
-"../feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
+"$OPENWRT_ROOT/scripts/feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
 
 echo "Installing nas and nas_luci packages..."
-"../feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
-"../feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }
+"$OPENWRT_ROOT/scripts/feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
+"$OPENWRT_ROOT/scripts/feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }
 ls -l $GITHUB_WORKSPACE
 
 

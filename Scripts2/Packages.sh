@@ -105,7 +105,8 @@ echo "Detected OpenWRT root directory: $OPENWRT_ROOT"
 # 添加新的 feeds 并更新安装 istore 相关软件包
 echo "Adding istore feed to feeds.conf.default..."
 echo >> "$OPENWRT_ROOT/feeds.conf.default"
-echo 'src-git istore https://github.com/linkease/istore;main' >> "$OPENWRT_ROOT/feeds.conf.default"
+# echo 'src-git istore https://github.com/linkease/istore;main' >> "$OPENWRT_ROOT/feeds.conf.default"
+echo 'src-git istore https://github.com/washsky/istore;washsky-patch-1' >> "$OPENWRT_ROOT/feeds.conf.default"
 
 echo "Updating istore feed..."
 "$OPENWRT_ROOT/scripts/feeds" update istore || { echo "Failed to update istore feed."; exit 1; }

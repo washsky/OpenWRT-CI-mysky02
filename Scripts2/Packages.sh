@@ -89,28 +89,38 @@ UPDATE_VERSION "tailscale"
 
 
 
+
 echo "Current working directory: $(pwd)"
 
+# 硬编码 OpenWRT 根目录路径
+OPENWRT_ROOT="/home/runner/work/OpenWRT-CI-mysky02/OpenWRT-CI-mysky02/wrt"
 
-
-# 确保在 OpenWRT 根目录下运行
-if [ ! -f "./scripts/feeds" ]; then
-    echo "Switching to OpenWRT root directory..."
-    cd ../../
-    if [ ! -f "./scripts/feeds" ]; then
-        echo "Error: Unable to locate OpenWRT root directory!"
-        exit 1
-    fi
+if [ ! -f "$OPENWRT_ROOT/feeds.conf.default" ]; then
+    echo "Error: Unable to locate OpenWRT root directory at $OPENWRT_ROOT!"
+    exit 1
 fi
 
-# 添加 istore 源
-echo "Adding istore feed to feeds.conf.default..."
-echo >> feeds.conf.default
-echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
+echo "Detected OpenWRT root directory: $OPENWRT_ROOT"
 
-# 更新并安装 istore 相关包
+# 添加新的 feeds 并更新安装 istore 相关软件包
+echo "Adding istore feed to feeds.conf.default..."
+echo >> "$OPENWRT_ROOT/feeds.conf.default"
+echo 'src-git istore https://github.com/linkease/istore;main' >> "$OPENWRT_ROOT/feeds.conf.default"
+
 echo "Updating istore feed..."
-./scripts/feeds update istore || { echo "Failed to update istore feed."; exit 1; }
+"$OPENWRT_ROOT/scripts/feeds" update istore || { echo "Failed to update istore feed."; exit 1; }
 
 echo "Installing luci-app-store package from istore feed..."
-./scripts/feeds install -d y -p istore luci-app-store || { echo "Failed to install luci-app-store."; exit 1; }
+"$OPENWRT_ROOT/scripts/feeds" install -d y -p istore luci-app-store || { echo "Failed to install luci-app-store."; exit 1; }
+
+# 添加新的 feeds 并更新安装 nas 相关软件包
+echo "Adding new feeds to feeds.conf.default..."
+echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> "$OPENWRT_ROOT/feeds.conf.default"
+echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> "$OPENWRT_ROOT/feeds.conf.default"
+
+echo "Updating feeds..."
+"$OPENWRT_ROOT/scripts/feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
+
+echo "Installing nas and nas_luci packages..."
+"$OPENWRT_ROOT/scripts/feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
+"$OPENWRT_ROOT/scripts/feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }

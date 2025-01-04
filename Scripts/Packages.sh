@@ -81,3 +81,31 @@ UPDATE_VERSION() {
 #UPDATE_VERSION "软件包名" "测试版，true，可选，默认为否"
 UPDATE_VERSION "sing-box"
 UPDATE_VERSION "tailscale"
+
+
+
+
+# 显示当前工作目录
+echo "Current working directory: $(pwd)"
+
+
+# 硬编码 OpenWRT 根目录路径
+OPENWRT_ROOT="/home/runner/work/OpenWRT-CI-mysky02/OpenWRT-CI-mysky02/wrt"
+
+
+
+# 添加新的 feeds 并更新安装 nas 相关软件包
+echo "Adding new feeds to feeds.conf.default..."
+echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> "$GITHUB_WORKSPACE/feeds.conf.default"
+echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> "$GITHUB_WORKSPACE/feeds.conf.default"
+
+ls -l $GITHUB_WORKSPACE
+
+echo "Updating feeds..."
+"$OPENWRT_ROOT/scripts/feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
+
+echo "Installing nas and nas_luci packages..."
+"$OPENWRT_ROOT/scripts/feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
+"$OPENWRT_ROOT/scripts/feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }
+ls -l $GITHUB_WORKSPACE
+

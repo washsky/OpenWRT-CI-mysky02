@@ -92,6 +92,8 @@ UPDATE_VERSION "tailscale"
 echo "Current working directory: $(pwd)"
 
 
+# 硬编码 OpenWRT 根目录路径
+OPENWRT_ROOT="/home/runner/work/OpenWRT-CI-mysky02/OpenWRT-CI-mysky02/wrt"
 
 
 

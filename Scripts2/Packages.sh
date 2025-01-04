@@ -35,8 +35,6 @@ UPDATE_PACKAGE "mosdns" "sbwml/luci-app-mosdns" "v5"
 UPDATE_PACKAGE "vnt" "lazyoop/networking-artifact" "main" "pkg"
 UPDATE_PACKAGE "easytier" "lazyoop/networking-artifact" "main" "pkg"
 
-# UPDATE_PACKAGE "istore" "linkease/istore" "main"
-
 
 UPDATE_PACKAGE "luci-app-advancedplus" "VIKINGYFY/packages" "main" "pkg"
 UPDATE_PACKAGE "luci-app-gecoosac" "lwb1978/openwrt-gecoosac" "main"
@@ -175,14 +173,30 @@ echo "Current working directory: $(pwd)"
 
 
 
+# # 添加新的 feeds 并更新安装 nas 相关软件包
+# echo "Adding new feeds to feeds.conf.default..."
+# echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> "$OPENWRT_ROOT/feeds.conf.default"
+# echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> "$OPENWRT_ROOT/feeds.conf.default"
+
+# echo "Updating feeds..."
+# "$OPENWRT_ROOT/scripts/feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
+
+# echo "Installing nas and nas_luci packages..."
+# "$OPENWRT_ROOT/scripts/feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
+# "$OPENWRT_ROOT/scripts/feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }
+
+
 # 添加新的 feeds 并更新安装 nas 相关软件包
 echo "Adding new feeds to feeds.conf.default..."
-echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> "$OPENWRT_ROOT/feeds.conf.default"
-echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> "$OPENWRT_ROOT/feeds.conf.default"
+echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> "$GITHUB_WORKSPACE/feeds.conf.default"
+echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> "$GITHUB_WORKSPACE/feeds.conf.default"
 
 echo "Updating feeds..."
-"$OPENWRT_ROOT/scripts/feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
+"$GITHUB_WORKSPACE/wrt/feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
 
 echo "Installing nas and nas_luci packages..."
-"$OPENWRT_ROOT/scripts/feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
-"$OPENWRT_ROOT/scripts/feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }
+"$GITHUB_WORKSPACE/wrt/feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
+"$GITHUB_WORKSPACE/wrt/feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }
+
+
+

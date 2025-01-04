@@ -191,12 +191,14 @@ echo "Adding new feeds to feeds.conf.default..."
 echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> "$GITHUB_WORKSPACE/feeds.conf.default"
 echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> "$GITHUB_WORKSPACE/feeds.conf.default"
 
+ls -l $GITHUB_WORKSPACE
+
 echo "Updating feeds..."
-"$GITHUB_WORKSPACE/wrt/feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
+"$GITHUB_WORKSPACE/scripts/feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
 
 echo "Installing nas and nas_luci packages..."
-"$GITHUB_WORKSPACE/wrt/feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
-"$GITHUB_WORKSPACE/wrt/feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }
-
+"$GITHUB_WORKSPACE/scripts/feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
+"$GITHUB_WORKSPACE/scripts/feeds" install -a -p nas_luci || { echo "Failed to install packages from nas_luci feed."; exit 1; }
+ls -l $GITHUB_WORKSPACE
 
 

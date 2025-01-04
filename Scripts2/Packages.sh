@@ -90,17 +90,17 @@ UPDATE_VERSION "tailscale"
 
 
 
-# echo "Current working directory: $(pwd)"
+echo "Current working directory: $(pwd)"
 
-# # 硬编码 OpenWRT 根目录路径
-# OPENWRT_ROOT="/home/runner/work/OpenWRT-CI-mysky02/OpenWRT-CI-mysky02/wrt"
+# 硬编码 OpenWRT 根目录路径
+OPENWRT_ROOT="/home/runner/work/OpenWRT-CI-mysky02/OpenWRT-CI-mysky02/wrt"
 
-# if [ ! -f "$OPENWRT_ROOT/feeds.conf.default" ]; then
-#     echo "Error: Unable to locate OpenWRT root directory at $OPENWRT_ROOT!"
-#     exit 1
-# fi
+if [ ! -f "$OPENWRT_ROOT/feeds.conf.default" ]; then
+    echo "Error: Unable to locate OpenWRT root directory at $OPENWRT_ROOT!"
+    exit 1
+fi
 
-# echo "Detected OpenWRT root directory: $OPENWRT_ROOT"
+echo "Detected OpenWRT root directory: $OPENWRT_ROOT"
 
 # # 添加新的 feeds 并更新安装 istore 相关软件包
 # echo "Adding istore feed to feeds.conf.default..."

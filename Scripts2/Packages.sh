@@ -194,7 +194,7 @@ echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >
 ls -l $GITHUB_WORKSPACE
 
 echo "Updating feeds..."
-"../scripts/feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
+"../feeds" update nas nas_luci || { echo "Failed to update nas and nas_luci feeds."; exit 1; }
 
 echo "Installing nas and nas_luci packages..."
 "../feeds" install -a -p nas || { echo "Failed to install packages from nas feed."; exit 1; }
